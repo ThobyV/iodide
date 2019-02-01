@@ -1,6 +1,7 @@
 import React from "react";
 import ErrorStackParser from "error-stack-parser";
 import StackFrame from "stackframe";
+import styled from "react-emotion";
 
 ErrorStackParser.parseV8OrIE = error => {
   const filtered = error.stack
@@ -104,6 +105,10 @@ ErrorStackParser.parseFFOrSafari = error => {
   }, ErrorStackParser);
 };
 
+const ErrorContainer = styled("div")``;
+const ErrorPrintout = styled("pre")`
+  margin: 0;
+`;
 export function trimStack(e) {
   // Handle passing in an Array of pre-parsed frames for testing
   const frames = e instanceof Array ? e : ErrorStackParser.parse(e);
@@ -121,15 +126,16 @@ export function trimStack(e) {
 
   return `${e.name}: ${e.message}\n${outputFrames.join("\n")}`;
 }
+// <div className="error-output">
 
 export default {
   shouldHandle: value => value instanceof Error,
   render: e => {
     const stack = trimStack(e);
     return (
-      <div className="error-output">
-        <pre>{stack}</pre>
-      </div>
+      <ErrorContainer>
+        <ErrorPrintout>{stack}</ErrorPrintout>
+      </ErrorContainer>
     );
   }
 };
